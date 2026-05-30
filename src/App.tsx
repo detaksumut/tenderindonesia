@@ -4746,6 +4746,12 @@ export default function App() {
                   <p className="text-sm text-zinc-300 leading-relaxed max-w-3xl">
                     Silakan masuk ke halaman <strong className="text-white">Upload &amp; Analisa RAB / BQ</strong> melalui menu sebelah kiri, dimulai dari urutan <strong className="text-red-400">① GAMBAR PROYEK</strong> dan <strong className="text-red-400">② BQ / Daftar Kuantitas Harga</strong> untuk memuat draf <strong className="text-white">Rencana Anggaran Biaya</strong> yang presisi&nbsp;— melalui foto scan cetak, spreadsheet Excel (.xls/.xlsx), atau copy-paste teks langsung. Sistem akan menyinkronkan seluruh item dengan harga patokan regional Indonesia yang valid.
                   </p>
+                  <div className="mt-3 flex items-start gap-2 bg-amber-950/40 border border-amber-700/50 rounded-lg px-3 py-2.5">
+                    <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+                    <p className="text-xs text-amber-300 leading-relaxed">
+                      <strong className="text-amber-200 uppercase tracking-wide">Keterbatasan Sistem Saat Ini:</strong> Karena masih adanya keterbatasan kapasitas kalkulasi, sistem ini hanya mampu menangani proyek tender dengan nilai pagu anggaran <strong className="text-white">maksimal Rp 10.000.000.000 (Sepuluh Miliar Rupiah)</strong>. Untuk proyek di atas nilai tersebut, hasil analisis mungkin tidak sepenuhnya akurat.
+                    </p>
+                  </div>
                   <div className="mt-4 flex gap-2">
                     <button
                       onClick={() => setActiveTab('rab')}
