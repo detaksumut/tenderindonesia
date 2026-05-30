@@ -6266,6 +6266,20 @@ export default function App() {
                   placeholder={accessMode === 'apikey' ? "AIzaSy..." : "TENDER-PRO-..."}
                 />
                 {accessError && <p className="text-xs text-red-500 mt-2 font-bold">{accessError}</p>}
+                
+                {accessMode === 'apikey' && (
+                  <div className="mt-3 text-[11px] text-slate-400 leading-normal">
+                    Belum punya API Key? Dapatkan secara gratis &amp; instan di{" "}
+                    <a 
+                      href="https://aistudio.google.com/app/apikey" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-cyan-450 hover:text-cyan-350 font-extrabold underline inline-flex items-center gap-0.5"
+                    >
+                      Google AI Studio ↗
+                    </a>
+                  </div>
+                )}
               </div>
               
               <div className="flex gap-3 justify-end mt-8">
