@@ -6333,9 +6333,24 @@ export default function App() {
                   </a>
                   
                   {accessMode === 'license' && (
-                    <div className="p-3 rounded-lg bg-zinc-950/80 border border-zinc-800 text-[11px] text-slate-400 leading-relaxed">
-                      <span className="font-bold text-red-400 block mb-1">💡 Uji Coba / Akses Cepat:</span>
-                      Gunakan Lisensi Preset <span className="font-mono bg-red-950/40 text-red-400 font-extrabold px-1.5 py-0.5 rounded border border-red-900/50">TENDER-PRO-VIP</span> untuk melanjutkan akses penuh ke sistem.
+                    <div className="space-y-2">
+                      <div className="p-3 rounded-lg bg-red-950/20 border border-red-900/50 text-[11px] text-red-250 leading-relaxed">
+                        <span className="font-bold text-red-400 block mb-1">🚫 Batas Penggunaan Habis:</span>
+                        Anda wajib membeli lisensi tetap untuk melanjutkan penggunaan sistem Tender Intelligence. Hubungi Administrator melalui WhatsApp:
+                        <a 
+                          href="https://wa.me/62811665212"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 flex items-center justify-center gap-1.5 p-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition-colors shadow-md shadow-emerald-950/50 cursor-pointer"
+                        >
+                          💬 HUBUNGI WA: 0811665212
+                        </a>
+                      </div>
+                      
+                      <div className="p-3 rounded-lg bg-zinc-950/80 border border-zinc-800 text-[11px] text-slate-400 leading-relaxed">
+                        <span className="font-bold text-amber-500 block mb-1">💡 Uji Coba / Akses Cepat:</span>
+                        Gunakan Lisensi Preset <span className="font-mono bg-red-950/40 text-red-400 font-extrabold px-1.5 py-0.5 rounded border border-red-900/50">TENDER-PRO-VIP</span> untuk melanjutkan akses penuh ke sistem.
+                      </div>
                     </div>
                   )}
                 </div>
