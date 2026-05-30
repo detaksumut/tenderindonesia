@@ -187,10 +187,21 @@ export default function App() {
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
 
   const checkAccessAndExecute = (action: () => void) => {
-    const validLicense = "TENDER-PRO-VIP";
-    const currentLicense = localStorage.getItem('tii_license_key');
+    const currentLicense = localStorage.getItem('tii_license_key') || "";
     
-    if (currentLicense === validLicense) {
+    const isLicenseValid = currentLicense === "TENDER-PRO-VIP" || (() => {
+      if (!currentLicense.startsWith("TI-")) return false;
+      const payload = currentLicense.slice(3);
+      if (!/^[A-Z]{8}$/.test(payload)) return false;
+      const weights = [3, 7, 1, 9, 5, 8, 2, 6];
+      let sum = 0;
+      for (let i = 0; i < 8; i++) {
+        sum += payload.charCodeAt(i) * weights[i];
+      }
+      return sum % 13 === 7;
+    })();
+    
+    if (isLicenseValid) {
       action();
       return;
     }
@@ -6386,8 +6397,21 @@ export default function App() {
                         setPendingAction(null);
                       }
                     } else {
-                      if (accessInput.trim() === "TENDER-PRO-VIP") {
-                        try { localStorage.setItem('tii_license_key', accessInput.trim()); } catch (e) {}
+                      const inputCode = accessInput.trim().toUpperCase();
+                      const isLicenseValid = inputCode === "TENDER-PRO-VIP" || (() => {
+                        if (!inputCode.startsWith("TI-")) return false;
+                        const payload = inputCode.slice(3);
+                        if (!/^[A-Z]{8}$/.test(payload)) return false;
+                        const weights = [3, 7, 1, 9, 5, 8, 2, 6];
+                        let sum = 0;
+                        for (let i = 0; i < 8; i++) {
+                          sum += payload.charCodeAt(i) * weights[i];
+                        }
+                        return sum % 13 === 7;
+                      })();
+
+                      if (isLicenseValid) {
+                        try { localStorage.setItem('tii_license_key', inputCode); } catch (e) {}
                         
                         let currentApiKey = apiKey || localStorage.getItem('gemini_api_key');
                         if (!currentApiKey) {
