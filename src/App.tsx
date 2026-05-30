@@ -5550,47 +5550,9 @@ export default function App() {
                             )}
                           </div>
 
-                          <div className="md:col-span-5 bg-slate-950/60 border border-slate-900 rounded-lg p-4 flex flex-col justify-between">
-                            <div>
-                              <span className="text-[9px] text-zinc-500 font-extrabold tracking-wider uppercase block">STATUS SINKRONISASI MATRIKS:</span>
-                              {boqFileUploaded ? (
-                                <div className="mt-2 space-y-2 text-xs">
-                                  <div className="flex justify-between items-center border-b border-slate-900 pb-1.5">
-                                    <span className="text-zinc-400">Total Nilai BoQ Resmi</span>
-                                    <strong className="text-white font-mono">Rp {((result.grandTotal || metaPagu) || 0).toLocaleString("id-ID")}</strong>
-                                  </div>
-                                  <div className="flex justify-between items-center border-b border-slate-900 pb-1.5">
-                                    <span className="text-zinc-400">Kesamaan Kuantitas/Sifat</span>
-                                    <strong className="text-emerald-400 font-mono">100% SINKRON</strong>
-                                  </div>
-                                  <div className="flex justify-between items-center border-b border-[#1e293b] pb-1.5">
-                                    <span className="text-zinc-400">Priced / Blank Option</span>
-                                    <span className="text-slate-200 font-bold font-mono">AKTIF</span>
-                                  </div>
-                                  <div className="flex justify-between items-center">
-                                    <span className="text-zinc-400">Total Item</span>
-                                    <strong className="text-white font-mono">{result.groups.reduce((acc, g) => acc + g.items.length, 0)} Baris</strong>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="py-6 text-center text-[11px] text-slate-500 italic">
-                                  Priced BQ belum diisi harga tender. Silakan unggah lembar blanko untuk menyinkronkan data harga dari RAB Step 2.
-                                </div>
-                              )}
-                            </div>
 
-                            <button
-                              onClick={() => {
-                                handleDirectBoqSample('bpbd');
-                              }}
-                              type="button"
-                              className="mt-4 w-full py-2 bg-[#ff2a42] hover:bg-red-700 text-white text-xs font-bold rounded transition-colors"
-                            >
-                              Simulasi Taut &amp; Run AI BQ Sync
-                            </button>
-                          </div>
                         </div>
-                      </div>
+
 
                       {boqFileUploaded ? (
                         <>
