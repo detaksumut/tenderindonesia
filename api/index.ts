@@ -7,8 +7,8 @@ import express from "express";
 import path from "path";
 import crypto from "crypto";
 import { GoogleGenAI, Type } from "@google/genai";
-import { REGIONAL_STANDARDS, buildAndEvaluateAHSP } from "../src/regionalData.ts";
-import { EstimationResult, RABGroup, RABItem, AuditAnomaly, AHSPTemplate } from "../src/types.ts";
+import { REGIONAL_STANDARDS, buildAndEvaluateAHSP } from "./regionalData.ts";
+import { EstimationResult, RABGroup, RABItem, AuditAnomaly, AHSPTemplate } from "./types.ts";
 
 // In-memory cache for stable session consistency (returns identical result for same files and properties)
 const analysisCache = new Map<string, any>();
