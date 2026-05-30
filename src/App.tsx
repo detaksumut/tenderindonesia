@@ -4743,8 +4743,8 @@ export default function App() {
               ) : (
                 <div className="bg-zinc-950/70 border border-zinc-800 rounded-xl p-6 text-left" id="dashboard-welcome-instructions">
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-2 text-red-400">Penyusunan RAB Konstruksi RI</h4>
-                  <p className="text-xs text-zinc-400 leading-relaxed max-w-3xl">
-                    Silakan masuk ke halaman <strong className="text-white">Upload &amp; Analisa RAB / BQ</strong> melalui menu sebelah kiri untuk memuat draf berkas penawaran baru (PDF, foto scan cetak, spreadsheet xls, atau mengopi teks manual). Sistem akan menyinkronkan seluruh item dengan harga patokan regional Indonesia yang valid.
+                  <p className="text-sm text-zinc-300 leading-relaxed max-w-3xl">
+                    Silakan masuk ke halaman <strong className="text-white">Upload &amp; Analisa RAB / BQ</strong> melalui menu sebelah kiri, dimulai dari urutan <strong className="text-red-400">① GAMBAR PROYEK</strong> dan <strong className="text-red-400">② BQ / Daftar Kuantitas Harga</strong> untuk memuat draf <strong className="text-white">Rencana Anggaran Biaya</strong> yang presisi&nbsp;— melalui foto scan cetak, spreadsheet Excel (.xls/.xlsx), atau copy-paste teks langsung. Sistem akan menyinkronkan seluruh item dengan harga patokan regional Indonesia yang valid.
                   </p>
                   <div className="mt-4 flex gap-2">
                     <button
