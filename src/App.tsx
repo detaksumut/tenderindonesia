@@ -1092,6 +1092,20 @@ export default function App() {
       }
       if (data.warning) {
         setWarningMessage(data.warning);
+        if (data.warning.includes("Batas Kuota") || data.warning.includes("Free-Tier Habis")) {
+          const trialCount = parseInt(localStorage.getItem('tii_trial_count') || "0");
+          if (trialCount >= 5) {
+            setAccessMode('license');
+            setAccessInput("");
+            setAccessError("Batas kuota harian/menit API Key bawaan habis! Karena batas 5x uji coba gratis Anda juga telah habis, silakan masukkan License Key Premium untuk melanjutkan.");
+            setShowAccessModal(true);
+          } else {
+            setAccessMode('apikey');
+            setAccessInput("");
+            setAccessError("Batas kuota harian/menit API Key bawaan habis! Silakan upgrade / masukkan API Key Gemini Anda sendiri di sini untuk melanjutkan uji coba gratis.");
+            setShowAccessModal(true);
+          }
+        }
       }
 
       // Default the AHSP detail viewer to the first item with AHSP code
@@ -1247,6 +1261,23 @@ export default function App() {
         }
 
         const data = await response.json();
+        if (data.warning) {
+          setWarningMessage(data.warning);
+          if (data.warning.includes("Batas Kuota") || data.warning.includes("Free-Tier Habis")) {
+            const trialCount = parseInt(localStorage.getItem('tii_trial_count') || "0");
+            if (trialCount >= 5) {
+              setAccessMode('license');
+              setAccessInput("");
+              setAccessError("Batas kuota harian/menit API Key bawaan habis! Karena batas 5x uji coba gratis Anda juga telah habis, silakan masukkan License Key Premium untuk melanjutkan.");
+              setShowAccessModal(true);
+            } else {
+              setAccessMode('apikey');
+              setAccessInput("");
+              setAccessError("Batas kuota harian/menit API Key bawaan habis! Silakan upgrade / masukkan API Key Gemini Anda sendiri di sini untuk melanjutkan uji coba gratis.");
+              setShowAccessModal(true);
+            }
+          }
+        }
         setBoqAnalysisLogs(prev => [
           ...prev, 
           `[1.8s] Membaca & menetapkan ${data.groups?.length || 0} grup pekerjaan...`,
@@ -1419,6 +1450,23 @@ export default function App() {
       }
 
       const data = await response.json();
+      if (data.warning) {
+        setWarningMessage(data.warning);
+        if (data.warning.includes("Batas Kuota") || data.warning.includes("Free-Tier Habis")) {
+          const trialCount = parseInt(localStorage.getItem('tii_trial_count') || "0");
+          if (trialCount >= 5) {
+            setAccessMode('license');
+            setAccessInput("");
+            setAccessError("Batas kuota harian/menit API Key bawaan habis! Karena batas 5x uji coba gratis Anda juga telah habis, silakan masukkan License Key Premium untuk melanjutkan.");
+            setShowAccessModal(true);
+          } else {
+            setAccessMode('apikey');
+            setAccessInput("");
+            setAccessError("Batas kuota harian/menit API Key bawaan habis! Silakan upgrade / masukkan API Key Gemini Anda sendiri di sini untuk melanjutkan uji coba gratis.");
+            setShowAccessModal(true);
+          }
+        }
+      }
       setBoqAnalysisLogs(prev => [
         ...prev, 
         `[1.6s] Menata ulang formula matriks volume & kaitan harga satuan...`,
