@@ -6413,6 +6413,24 @@ export default function App() {
                       if (isLicenseValid) {
                         try { localStorage.setItem('tii_license_key', inputCode); } catch (e) {}
                         
+                        // Kirim log aktivitas ke Google Sheets
+                        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbz_PLACEHOLDER_YOUR_WEBAPP_URL/exec";
+                        if (!GOOGLE_SHEET_URL.includes("PLACEHOLDER")) {
+                          try {
+                            fetch(GOOGLE_SHEET_URL, {
+                              method: 'POST',
+                              mode: 'no-cors',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                app: "Tender Indonesia",
+                                license: inputCode,
+                                action: "Aktivasi",
+                                userAgent: navigator.userAgent
+                              })
+                            }).catch(() => {});
+                          } catch (err) {}
+                        }
+                        
                         let currentApiKey = apiKey || localStorage.getItem('gemini_api_key');
                         if (!currentApiKey) {
                           // Transition to congratulations and upgrade recommendation popup step!
