@@ -6285,7 +6285,7 @@ export default function App() {
                 {accessMode === 'apikey' 
                   ? "Sistem membutuhkan API Key Google Gemini (AI Studio) untuk memproses analisis dokumen. Anda memiliki jatah uji coba gratis 5 kali eksekusi setelah memasukkan key ini."
                   : accessMode === 'upgrade_suggestion'
-                    ? "Lisensi Anda telah aktif! Untuk kenyamanan, kestabilan, dan kecepatan analisis maksimal tanpa hambatan antrean kuota bersama, kami menyarankan Anda memasukkan API Key Gemini pribadi Anda sendiri. Tenang saja, Google menyediakannya secara 100% gratis!"
+                    ? "Lisensi Anda telah aktif! Untuk kenyamanan, kestabilan, dan kecepatan analisis maksimal tanpa hambatan antrean kuota bersama, kami menyarankan Anda memasukkan API Key Gemini pribadi Anda sendiri. Dengan begitu, Anda dapat menikmati layanan premium secara optimal dengan performa super cepat! Tenang saja, Google menyediakannya secara 100% gratis!"
                     : "Batas 5 kali uji coba gratis Anda telah habis. Silakan masukkan License Key Premium untuk melanjutkan akses penuh (Unlimited) ke sistem Tender Intelligence."}
               </p>
               
