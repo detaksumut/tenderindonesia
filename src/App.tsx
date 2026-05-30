@@ -1357,7 +1357,7 @@ export default function App() {
     reader.readAsDataURL(selectedFile);
   };
 
-  const handleDirectBoqSample = async (sampleType: 'bpbd' | 'jalan') => {
+  const executeHandleDirectBoqSample = async (sampleType: 'bpbd' | 'jalan') => {
     setAnalyzingBoq(true);
     setBoqAnalysisLogs([
       `[0.2s] Memulai simulasi pembacaan berkas BoQ kosong panitia...`,
@@ -1479,8 +1479,8 @@ export default function App() {
     }
   };
 
-  const handleDirectBoqSample = () => {
-    checkAccessAndExecute(() => executeHandleDirectBoqSample());
+  const handleDirectBoqSample = (sampleType: 'bpbd' | 'jalan') => {
+    checkAccessAndExecute(() => executeHandleDirectBoqSample(sampleType));
   };
 
   useEffect(() => {
