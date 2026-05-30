@@ -1,0 +1,6 @@
+{
+  "name": "Tender Intelegence Indonesia",
+  "description": "Sistem Penyusun RAB Kontraktor untuk menghasilkan dokumen penawaran tender presisi bersertifikat SSH Pemerintah, lengkap dengan penyesuaian persentase dan ekspor Excel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

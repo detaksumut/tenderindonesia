@@ -1,0 +1,599 @@
+@import "tailwindcss";
+
+/* Master Dark / Black Mode Theme Reset */
+body, #applet-root {
+  background-color: #000000 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Force header and sticky elements to pitch black or deep dark charcoal */
+#main-header, header {
+  background-color: #09090b !important;
+  border-color: #27272a !important;
+  color: #f8fafc !important;
+}
+
+#main-header h1, #main-header select {
+  color: #f8fafc !important;
+}
+
+#main-header select option {
+  background-color: #09090b !important;
+  color: #f8fafc !important;
+}
+
+/* Sidebar styling for premium dark theme */
+#sidebar-panel, aside {
+  background-color: #09090b !important;
+  border-color: #27272a !important;
+}
+
+#sidebar-panel h2 {
+  color: #a1a1aa !important;
+}
+
+#sidebar-panel nav button {
+  color: #d4d4d8 !important;
+}
+
+#sidebar-panel nav button:not([class*="bg-red-650"]) {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+}
+
+#sidebar-panel nav button:not([class*="bg-red-650"]):hover {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+}
+
+/* General containers, panels & cards in main viewport */
+#main-viewport-content div[class*="bg-white"],
+#workspace div[class*="bg-white"],
+div[class*="bg-white"],
+section[class*="bg-white"],
+ul[class*="bg-white"],
+p[class*="bg-white"],
+span[class*="bg-white"],
+button[class*="bg-white"],
+div[class*="bg-slate-50"],
+div[class*="bg-slate-55"],
+button[class*="bg-slate-50"] {
+  background-color: #09090b !important;
+  border-color: #27272a !important;
+  color: #f4f4f5 !important;
+}
+
+/* Form inputs, textareas & select elements in dark mode */
+input, textarea, select {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  color: #f4f4f5 !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #71717a !important;
+}
+
+/* Adjust heading styles with high contrast */
+h1, h2, h3, h4, h5, h6,
+.text-slate-900, .text-slate-950, .text-slate-800 {
+  color: #ffffff !important;
+}
+
+/* Interactive elements and text overrides */
+.text-slate-500, .text-slate-400 {
+  color: #a1a1aa !important;
+}
+
+.text-slate-650, .text-slate-600 {
+  color: #d4d4d8 !important;
+}
+
+.text-slate-705, .text-slate-805, .text-slate-800 {
+  color: #e4e4e7 !important;
+}
+
+/* Custom styles for sample blocks */
+button[id^="sample-btn-"] {
+  background-color: #09090b !important;
+  border-color: #27272a !important;
+}
+
+button[id^="sample-btn-"]:hover {
+  background-color: #18181b !important;
+}
+
+/* Ensure the Excel Online spreadsheet has pristine, highly readable light theme styles to match real MS Excel without global dark-mode text/bg pollution */
+#excel-interface-wrapper {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
+#excel-interface-wrapper div[class*="bg-white"],
+#excel-interface-wrapper .bg-white {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+#excel-interface-wrapper select,
+#excel-interface-wrapper input {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-color: #cbd5e1 !important;
+}
+
+#excel-interface-wrapper span,
+#excel-interface-wrapper p,
+#excel-interface-wrapper div {
+  color: inherit;
+}
+
+#excel-interface-wrapper .text-white,
+#excel-interface-wrapper .text-white *,
+#excel-interface-wrapper .text-emerald-100 {
+  color: #ffffff !important;
+}
+
+#excel-interface-wrapper .bg-\[\#107c41\] {
+  background-color: #107c41 !important;
+}
+
+#excel-interface-wrapper .bg-zinc-100 {
+  background-color: #f4f4f5 !important;
+}
+
+#excel-interface-wrapper .text-zinc-750,
+#excel-interface-wrapper .text-zinc-900,
+#excel-interface-wrapper .text-zinc-400,
+#excel-interface-wrapper .text-zinc-500 {
+  color: #3f3f46 !important;
+}
+
+#excel-grid-table {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+#excel-grid-table th {
+  background-color: #f3f2f1 !important;
+  color: #323130 !important;
+  border-color: #cbd5e1 !important;
+}
+
+#excel-grid-table td {
+  border-color: #e2e8f0 !important;
+  background-color: #ffffff !important;
+  color: #334155 !important;
+}
+
+#excel-grid-table td * {
+  color: inherit !important;
+}
+
+/* Ensure alternating and styled rows display correctly in Excel Online */
+#excel-grid-table tr.bg-\[\#e2efda\]\/70,
+#excel-grid-table tr.bg-\[\#e2efda\]\/70 td {
+  background-color: #e2efda !important;
+  color: #2e561e !important;
+}
+
+#excel-grid-table tr.bg-\[\#f2f2f2\]\/70,
+#excel-grid-table tr.bg-\[\#f2f2f2\]\/70 td,
+#excel-grid-table tr.bg-\[\#f2f2f2\],
+#excel-grid-table tr.bg-\[\#f2f2f2\] td {
+  background-color: #f1f5f9 !important;
+  color: #334155 !important;
+}
+
+#excel-grid-table tr.bg-\[\#c6e0b4\]\/60,
+#excel-grid-table tr.bg-\[\#c6e0b4\]\/60 td {
+  background-color: #c6e0b4 !important;
+  color: #274e13 !important;
+}
+
+#excel-grid-table tr.bg-\[\#fff2cc\],
+#excel-grid-table tr.bg-\[\#fff2cc\] td {
+  background-color: #fff2cc !important;
+  color: #7f6000 !important;
+}
+
+#excel-grid-table td.bg-\[\#e2f0d9\]\/50 {
+  background-color: #e2f0d9 !important;
+}
+
+#excel-grid-table .text-slate-800,
+#excel-grid-table .text-slate-900,
+#excel-grid-table .text-slate-950,
+#excel-grid-table .text-slate-705,
+#excel-grid-table .text-slate-805 {
+  color: #334155 !important;
+}
+
+#excel-grid-table .text-slate-500,
+#excel-grid-table .text-slate-400 {
+  color: #64748b !important;
+}
+
+#excel-grid-table .text-\[\#2e561e\] {
+  color: #2e561e !important;
+}
+
+#excel-grid-table .text-\[\#225011\] {
+  color: #225011 !important;
+}
+
+/* Ensure spreadsheet table grid reads elegantly and has NO white blocking overlays */
+#tender-paper-sheet, #boq-paper-sheet {
+  background-color: #09090b !important;
+  border-color: #27272a !important;
+  box-shadow: none !important;
+}
+
+#tender-paper-sheet table, #boq-paper-sheet table {
+  border-color: #27272a !important;
+}
+
+#tender-paper-sheet th, #boq-paper-sheet th {
+  background-color: #18181b !important;
+  color: #f8fafc !important;
+  border-color: #27272a !important;
+}
+
+#tender-paper-sheet td, #boq-paper-sheet td {
+  color: #e4e4e7 !important;
+  border-color: #27272a !important;
+}
+
+/* Force dark backgrounds on all row and cell elements with background classes inside the sheets */
+#tender-paper-sheet tr,
+#tender-paper-sheet td,
+#boq-paper-sheet tr,
+#boq-paper-sheet td {
+  background-color: #09090b !important;
+}
+
+#tender-paper-sheet [class*="bg-slate-50"],
+#tender-paper-sheet td[class*="bg-slate-50"],
+#tender-paper-sheet tr[class*="bg-slate-50"],
+#boq-paper-sheet [class*="bg-slate-50"],
+#boq-paper-sheet td[class*="bg-slate-50"],
+#boq-paper-sheet tr[class*="bg-slate-50"],
+#tender-paper-sheet [class*="bg-slate-55"],
+#tender-paper-sheet td[class*="bg-slate-55"],
+#tender-paper-sheet tr[class*="bg-slate-55"],
+#boq-paper-sheet [class*="bg-slate-55"],
+#boq-paper-sheet td[class*="bg-slate-55"],
+#boq-paper-sheet tr[class*="bg-slate-55"] {
+  background-color: #16161a !important; /* Deep charcoal for sub-headers and alternates */
+}
+
+#tender-paper-sheet [class*="bg-slate-50"]:hover,
+#tender-paper-sheet td[class*="bg-slate-50"]:hover,
+#tender-paper-sheet tr[class*="bg-slate-50"]:hover,
+#boq-paper-sheet [class*="bg-slate-50"]:hover,
+#boq-paper-sheet td[class*="bg-slate-50"]:hover,
+#boq-paper-sheet tr[class*="bg-slate-50"]:hover {
+  background-color: #1c1c22 !important;
+}
+
+/* Styled active list rows on hover */
+#tender-paper-sheet tr:hover:not(.h-5),
+#boq-paper-sheet tr:hover:not(.h-5),
+#tender-paper-sheet tr:hover:not(.h-5) td,
+#boq-paper-sheet tr:hover:not(.h-5) td {
+  background-color: #18181b !important;
+}
+
+/* Clean up status row context */
+#tender-paper-sheet tr.bg-slate-50:last-child,
+#tender-paper-sheet tr.bg-slate-50:last-child td,
+#boq-paper-sheet tr.bg-slate-50:last-child,
+#boq-paper-sheet tr.bg-slate-50:last-child td {
+  background-color: #0f1715 !important; /* Deep jungle forest base tint */
+}
+
+/* Force border styling across all spreadsheet elements inside paper container to match dark premium design */
+#tender-paper-sheet [class*="border-slate-"],
+#tender-paper-sheet [class*="border-purple-"],
+#tender-paper-sheet [class*="divide-slate-"],
+#boq-paper-sheet [class*="border-slate-"],
+#boq-paper-sheet [class*="border-purple-"],
+#boq-paper-sheet [class*="divide-slate-"] {
+  border-color: #27272a !important;
+}
+
+/* Specific text visibility in dark table */
+#tender-paper-sheet text,
+#tender-paper-sheet .text-slate-950:not([class*="bg-amber"]):not([class*="bg-amber/"]),
+#tender-paper-sheet .text-slate-900:not([class*="bg-amber"]):not([class*="bg-amber/"]),
+#tender-paper-sheet .text-slate-800:not([class*="bg-amber"]):not([class*="bg-amber/"]),
+#boq-paper-sheet text,
+#boq-paper-sheet .text-slate-950:not([class*="bg-amber"]):not([class*="bg-amber/"]),
+#boq-paper-sheet .text-slate-900:not([class*="bg-amber"]):not([class*="bg-amber/"]),
+#boq-paper-sheet .text-slate-800:not([class*="bg-amber"]):not([class*="bg-amber/"]) {
+  color: #f8fafc !important;
+}
+
+#tender-paper-sheet .text-slate-500,
+#tender-paper-sheet .text-slate-400,
+#boq-paper-sheet .text-slate-500,
+#boq-paper-sheet .text-slate-400 {
+  color: #a1a1aa !important;
+}
+
+/* Custom Highlight colors inside dark sheet */
+#tender-paper-sheet .text-red-755,
+#tender-paper-sheet .text-red-750,
+#tender-paper-sheet .text-red-650,
+#tender-paper-sheet .text-red-600,
+#boq-paper-sheet .text-red-755,
+#boq-paper-sheet .text-red-750,
+#boq-paper-sheet .text-red-650,
+#boq-paper-sheet .text-red-600 {
+  color: #f43f5e !important; /* Rich red rose highlight */
+}
+
+#tender-paper-sheet .text-emerald-700,
+#boq-paper-sheet .text-emerald-700 {
+  color: #10b981 !important; /* Pure emerald green */
+}
+
+/* HIGH-CONTRAST GOLD/AMBER CATEGORY HEADERS - DEEP PREMIUM OAK BRONZE WITH SHARP GOLD TEXT */
+#tender-paper-sheet tr.bg-amber-300,
+#tender-paper-sheet tr.bg-amber-300 td,
+#boq-paper-sheet tr.bg-amber-300,
+#boq-paper-sheet tr.bg-amber-300 td {
+  background-color: #291e03 !important; /* Premium dark amber-bronze */
+}
+
+#tender-paper-sheet tr.bg-amber-300 td,
+#tender-paper-sheet tr.bg-amber-300 td *,
+#boq-paper-sheet tr.bg-amber-300 td,
+#boq-paper-sheet tr.bg-amber-300 td * {
+  color: #fbbf24 !important; /* Blazing gold text */
+  font-weight: 900 !important;
+}
+
+/* HIGH-CONTRAST YELLOW/AMBER SUBTOTALS - SLEEK INTENSE ACCENT GOLD ON DARK WOOD BACKGROUND */
+#tender-paper-sheet tr.bg-amber-100,
+#tender-paper-sheet tr.bg-amber-100 td,
+#tender-paper-sheet td.bg-amber-100,
+#boq-paper-sheet tr.bg-amber-100,
+#boq-paper-sheet tr.bg-amber-100 td,
+#boq-paper-sheet td.bg-amber-100 {
+  background-color: #1a1403 !important; /* Dark rich gold-slate */
+}
+
+#tender-paper-sheet tr.bg-amber-100 td,
+#tender-paper-sheet tr.bg-amber-100 td *,
+#tender-paper-sheet td.bg-amber-100,
+#tender-paper-sheet td.bg-amber-100 *,
+#boq-paper-sheet tr.bg-amber-100 td,
+#boq-paper-sheet tr.bg-amber-100 td *,
+#boq-paper-sheet td.bg-amber-100,
+#boq-paper-sheet td.bg-amber-100 * {
+  color: #fbbf24 !important; /* Extremely high-contrast bright golden text */
+  font-weight: 900 !important;
+}
+
+/* HIGH-CONTRAST CALCULATION FOOTERS (TOTAL HARGA, PPN, TOTAL ANGGARAN) */
+#tender-paper-sheet [class*="bg-slate-100"],
+#tender-paper-sheet td[class*="bg-slate-100"],
+#tender-paper-sheet tr[class*="bg-slate-100"] td,
+#boq-paper-sheet [class*="bg-slate-100"],
+#boq-paper-sheet td[class*="bg-slate-100"],
+#boq-paper-sheet tr[class*="bg-slate-100"] td,
+#tender-paper-sheet tr[class*="bg-slate-100"] td[class*="bg-slate-50"],
+#boq-paper-sheet tr[class*="bg-slate-100"] td[class*="bg-slate-50"],
+#tender-paper-sheet tr[class*="bg-slate-100"] td[class*="bg-slate-50/"],
+#boq-paper-sheet tr[class*="bg-slate-100"] td[class*="bg-slate-50/"] {
+  background-color: #0d1117 !important; /* Deep dark slate background */
+}
+
+#tender-paper-sheet [class*="bg-slate-100"] td,
+#tender-paper-sheet [class*="bg-slate-100"] td *,
+#tender-paper-sheet td[class*="bg-slate-100"],
+#tender-paper-sheet td[class*="bg-slate-100"] *,
+#boq-paper-sheet [class*="bg-slate-100"] td,
+#boq-paper-sheet [class*="bg-slate-100"] td *,
+#boq-paper-sheet td[class*="bg-slate-100"],
+#boq-paper-sheet td[class*="bg-slate-100"] *,
+#tender-paper-sheet tr[class*="bg-slate-100"] td,
+#tender-paper-sheet tr[class*="bg-slate-100"] td *,
+#boq-paper-sheet tr[class*="bg-slate-100"] td,
+#boq-paper-sheet tr[class*="bg-slate-100"] td * {
+  color: #f1f5f9 !important; /* Bright crisp white text for high contrast */
+}
+
+#tender-paper-sheet [class*="bg-slate-200"],
+#tender-paper-sheet td[class*="bg-slate-200"],
+#tender-paper-sheet tr[class*="bg-slate-200"] td,
+#boq-paper-sheet [class*="bg-slate-200"],
+#boq-paper-sheet td[class*="bg-slate-200"],
+#boq-paper-sheet tr[class*="bg-slate-200"] td {
+  background-color: #0f1c30 !important; /* Deep sapphire blue background */
+}
+
+#tender-paper-sheet [class*="bg-slate-200"] td,
+#tender-paper-sheet [class*="bg-slate-200"] td *,
+#tender-paper-sheet td[class*="bg-slate-200"],
+#tender-paper-sheet td[class*="bg-slate-200"] *,
+#boq-paper-sheet [class*="bg-slate-200"] td,
+#boq-paper-sheet [class*="bg-slate-200"] td *,
+#boq-paper-sheet td[class*="bg-slate-200"],
+#boq-paper-sheet td[class*="bg-slate-200"] * {
+  color: #ffffff !important; /* Bold high-contrast white */
+}
+
+/* Ensure red/rose Crimson text accents stand out in footers */
+#tender-paper-sheet .text-red-750,
+#tender-paper-sheet .text-red-650,
+#boq-paper-sheet .text-red-750,
+#boq-paper-sheet .text-red-650 {
+  color: #f43f5e !important;
+}
+
+/* Scrollbar styling for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* ==========================================================================
+   CLEAN-UP CONTRAST & LEGIBILITY OVERLAY FOR LIGHT LAYERS & DIALOG OVERLAYS
+   ========================================================================== */
+
+/* Overwrite text-slate-700 globally to guarantee outstanding readability on the dark background */
+.text-slate-700 {
+  color: #e2e8f0 !important; /* Crisp, bright, elegant light-slate text color */
+}
+
+/* Safely force all elements with light color helpers to NEVER have white-on-white text */
+.bg-\[\#fff5f5\],
+[class*="bg-[#fff5f5]"],
+div[class*="bg-[#fff5f5]"],
+.bg-emerald-50,
+.bg-emerald-100,
+.bg-blue-50,
+.bg-blue-100,
+.bg-cyan-50,
+.bg-cyan-100,
+.bg-amber-50,
+.bg-amber-100,
+.bg-red-50,
+.bg-red-100,
+.bg-slate-100,
+.bg-zinc-100,
+.bg-white\/60,
+.bg-white\/70,
+.bg-white\/80 {
+  color: #0f172a !important; /* Deep dark Slate-900 typography for high-contrast readability */
+}
+
+/* Ensure child elements of these light background containers also retain absolute readability */
+.bg-\[\#fff5f5\] *,
+[class*="bg-[#fff5f5]"] *,
+div[class*="bg-[#fff5f5]"] *,
+.bg-emerald-50 *,
+.bg-emerald-100 *,
+.bg-blue-50 *,
+.bg-blue-100 *,
+.bg-cyan-50 *,
+.bg-cyan-100 *,
+.bg-amber-50 *,
+.bg-amber-100 *,
+.bg-red-50 *,
+.bg-red-100 *,
+.bg-slate-100 *,
+.bg-zinc-100 *,
+.bg-white\/60 *,
+.bg-white\/70 *,
+.bg-white\/80 * {
+  color: #0f172a !important; /* Force high-contrast charcoal for internal items */
+}
+
+/* Override dynamically explicit utility classes like text-slate-700 inside light containers */
+.bg-\[\#fff5f5\] [class*="text-slate-"],
+[class*="bg-[#fff5f5]"] [class*="text-slate-"],
+div[class*="bg-[#fff5f5]"] [class*="text-slate-"],
+.bg-emerald-50 [class*="text-slate-"],
+.bg-emerald-100 [class*="text-slate-"],
+.bg-blue-50 [class*="text-slate-"],
+.bg-blue-100 [class*="text-slate-"],
+.bg-cyan-50 [class*="text-slate-"],
+.bg-cyan-100 [class*="text-slate-"],
+.bg-amber-50 [class*="text-slate-"],
+.bg-amber-100 [class*="text-slate-"],
+.bg-red-50 [class*="text-slate-"],
+.bg-red-100 [class*="text-slate-"],
+.bg-slate-100 [class*="text-slate-"],
+.bg-zinc-100 [class*="text-slate-"],
+.bg-white\/60 [class*="text-slate-"],
+.bg-white\/70 [class*="text-slate-"],
+.bg-white\/80 [class*="text-slate-"] {
+  color: #0f172a !important;
+}
+
+/* Exempt high contrast text-white or custom colored text inside any of the normalized elements */
+div[class*="bg-"] .text-white,
+div[class*="bg-"] .text-slate-100,
+div[class*="bg-"] .text-cyan-400,
+div[class*="bg-"] .text-emerald-400,
+div[class*="bg-"] .text-sky-400,
+div[class*="bg-"] .text-amber-400,
+div[class*="bg-"] .text-rose-400,
+div[class*="bg-"] .text-red-400,
+div[class*="bg-"] .text-teal-400,
+.bg-emerald-50 .text-white,
+.bg-emerald-100 .text-white,
+.bg-blue-50 .text-white,
+.bg-blue-100 .text-white,
+.bg-cyan-50 .text-white,
+.bg-cyan-100 .text-white,
+.bg-slate-100 .text-white,
+.bg-zinc-100 .text-white,
+.bg-white\/60 .text-white,
+.bg-white\/70 .text-white,
+.bg-white\/80 .text-white,
+/* Also exempt elements inside dark components like buttons nested in light/slate containers */
+.bg-slate-100 button[class*="bg-"],
+.bg-slate-100 button[class*="bg-"] *,
+.bg-zinc-100 button[class*="bg-"],
+.bg-zinc-100 button[class*="bg-"] *,
+.bg-slate-100 [class*="bg-[#101F3E]"],
+.bg-slate-100 [class*="bg-[#101F3E]"] *,
+.bg-slate-100 [class*="bg-[#ff2a42]"],
+.bg-slate-100 [class*="bg-[#ff2a42]"] * {
+  color: #ffffff !important;
+}
+
+/* Make red warnings extremely clear with deep crimson color override */
+.bg-\[\#fff5f5\],
+.bg-\[\#fff5f5\] *,
+[class*="bg-[#fff5f5]"] *,
+.bg-red-50,
+.bg-red-50 * {
+  color: #7f1d1d !important;
+}
+
+/* Ensure spreadsheet table inputs inside mockup CAD or editable grids have excellent readability */
+#main-viewport-content td input {
+  color: #f4f4f5 !important; /* High contrast white/zinc text inside dark theme table cells */
+  background-color: transparent !important;
+}
+
+#main-viewport-content td input:hover {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+}
+
+#main-viewport-content td input:focus {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #ff2a42 !important;
+  box-shadow: 0 0 0 2px rgba(255, 42, 66, 0.2) !important;
+}
+
+/* Focused form inputs across all application screens to guarantee text doesn't turn invisible */
+input:focus, select:focus, textarea:focus {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Prevent tooltip or status badges from being unreadable */
+span[class*="bg-red-50"],
+span[class*="bg-emerald-50"],
+span[class*="bg-amber-50"] {
+  border-color: currentColor !important;
+}
