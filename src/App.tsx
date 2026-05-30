@@ -6324,10 +6324,20 @@ export default function App() {
                     } else {
                       if (accessInput.trim() === "TENDER-PRO-VIP") {
                         try { localStorage.setItem('tii_license_key', accessInput.trim()); } catch (e) {}
-                        setShowAccessModal(false);
-                        if (pendingAction) {
-                          pendingAction();
-                          setPendingAction(null);
+                        
+                        // Check if they already have an API key configured
+                        let currentApiKey = apiKey || localStorage.getItem('gemini_api_key');
+                        if (!currentApiKey) {
+                          // Transition to API Key mode directly so they can input it in the same modal!
+                          setAccessMode('apikey');
+                          setAccessInput("");
+                          setAccessError("");
+                        } else {
+                          setShowAccessModal(false);
+                          if (pendingAction) {
+                            pendingAction();
+                            setPendingAction(null);
+                          }
                         }
                       } else {
                         setAccessError("License Key tidak valid! Hubungi administrator.");
