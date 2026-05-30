@@ -4757,33 +4757,51 @@ export default function App() {
                 </div>
               )}
 
-              {/* Sandboxed Real-world Samples */}
-              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs text-left" id="dashboard-samples-card">
-                <h4 className="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-1.5">
-                  <Layers className="h-4 w-4 text-red-600" />
-                  Uji Coba Berkas Nyata Pembanding (Sandbox Simulasi)
+              {/* Methodology Info Panel */}
+              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs text-left" id="dashboard-methodology-card">
+                <h4 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-1.5">
+                  <Info className="h-4 w-4 text-blue-600 shrink-0" />
+                  Bagaimana Sistem Ini Menghitung Harga?
                 </h4>
-                <p className="text-xs text-slate-500 mb-4 font-normal">Pilih salah satu kegagalan penawaran konstruksi di bawah ini untuk melihat simulasi penyelarasan cepat oleh kecerdasan buatan:</p>
-                <div className="space-y-2">
-                  {REAL_RAB_SAMPLES.map((sample, idx) => (
-                    <button
-                      key={idx}
-                      id={`sample-btn-${idx}`}
-                      onClick={() => applySample(sample.text, sample.region)}
-                      className={`w-full text-left p-3 rounded-lg border transition text-xs flex flex-col gap-1 cursor-pointer ${
-                        inputText === sample.text 
-                          ? 'border-red-500 bg-red-50 text-red-950 font-semibold' 
-                          : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-600'
-                      }`}
-                    >
-                      <span className="font-bold flex items-center justify-between text-slate-800">
-                        {sample.name}
-                        <span className="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded px-2 font-bold uppercase tracking-tight">{sample.region}</span>
-                      </span>
-                      <span className="line-clamp-1 opacity-75">{sample.text.substring(0, 120)}...</span>
-                    </button>
-                  ))}
+                <div className="space-y-3">
+
+                  {/* Point 1 */}
+                  <div className="flex gap-3 p-3.5 rounded-lg bg-blue-50 border border-blue-100">
+                    <div className="shrink-0 w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-black">1</div>
+                    <div>
+                      <p className="text-xs font-black text-blue-900 uppercase tracking-tight mb-1">Harga Dasar: SSH & Standar Resmi Pemerintah</p>
+                      <p className="text-xs text-blue-800 leading-relaxed">
+                        Seluruh harga satuan yang digunakan sistem ini bersumber dari <strong>Standar Satuan Harga (SSH)</strong> yang ditetapkan resmi oleh Pemerintah Daerah / Kementerian PUPR untuk setiap wilayah dan tahun anggaran. Sistem selalu mengambil <strong>harga terendah yang berlaku</strong> sebagai basis kalkulasi agar perhitungan awal berada di posisi paling efisien dan aman secara hukum.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Point 2 */}
+                  <div className="flex gap-3 p-3.5 rounded-lg bg-amber-50 border border-amber-100">
+                    <div className="shrink-0 w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-black">2</div>
+                    <div>
+                      <p className="text-xs font-black text-amber-900 uppercase tracking-tight mb-1">Estimasi Biaya Terendah = Landasan Strategi Tender Anda</p>
+                      <p className="text-xs text-amber-900 leading-relaxed">
+                        Dengan mengetahui <strong>Estimasi Biaya Terendah</strong> yang dihasilkan sistem ini, kontraktor dapat menghitung secara cermat berapa harga penawaran yang <em>wajar dan kompetitif</em> — dengan memperhitungkan seluruh <strong>biaya taktis</strong> yang muncul mulai dari proses pendaftaran tender, jaminan penawaran, biaya administrasi, mobilisasi lapangan, hingga selesainya pelaksanaan proyek dan serah terima PHO.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Point 3 */}
+                  <div className="flex gap-3 p-3.5 rounded-lg bg-emerald-50 border border-emerald-100">
+                    <div className="shrink-0 w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-black">3</div>
+                    <div>
+                      <p className="text-xs font-black text-emerald-900 uppercase tracking-tight mb-1">Margin Keuntungan: Sesuai Standar Perhitungan Pemerintah</p>
+                      <p className="text-xs text-emerald-900 leading-relaxed">
+                        Keuntungan kontraktor yang diakui dalam regulasi pengadaan pemerintah RI umumnya berkisar <strong>5%–15% dari nilai kontrak</strong>, tergantung kompleksitas dan risiko pekerjaan. Ditambah biaya overhead & profit (O&P) sebesar ±15% sesuai standar AHSP PUPR. Sistem ini membantu Anda memastikan penawaran Anda berada dalam koridor yang <strong>rasional, tidak di bawah harga pokok, dan tidak melebihi pagu anggaran.</strong>
+                      </p>
+                    </div>
+                  </div>
+
                 </div>
+                <p className="text-[10px] text-slate-400 mt-3 font-normal leading-relaxed">
+                  ⚡ Referensi: Perpres No. 16/2018 tentang Pengadaan Barang/Jasa Pemerintah, Permen PUPR No. 1/2022 tentang Pedoman Penyusunan AHSP, dan SSH Provinsi/Kabupaten/Kota masing-masing wilayah yang berlaku.
+                </p>
               </div>
 
               {/* Dynamic Executive Download Panel */}
