@@ -1,13 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tender Indonesia - Estimator & Audit Konstruksi</title>
+    
+    <!-- PWA Meta and Links -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#020617" />
+    <link rel="icon" type="image/png" href="/LogoBINews.png" />
+    <link rel="apple-touch-icon" href="/LogoBINews.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('PWA ServiceWorker registered on scope:', reg.scope))
+            .catch(err => console.log('PWA ServiceWorker registration failed:', err));
+        });
+      }
+    </script>
   </body>
 </html>
-

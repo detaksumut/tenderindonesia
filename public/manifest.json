@@ -1,0 +1,24 @@
+{
+  "short_name": "Tender Intel",
+  "name": "Tender Intelligence Indonesia",
+  "description": "Sistem Analisa & Estimator Tender Konstruksi Nasional",
+  "icons": [
+    {
+      "src": "/LogoBINews.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/LogoBINews.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "display": "standalone",
+  "orientation": "any"
+}
