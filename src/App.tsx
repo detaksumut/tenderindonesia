@@ -1116,7 +1116,6 @@ export default function App() {
       console.error(err);
       alert("Error: " + err.message);
     } finally {
-    } finally {
       setLoading(false);
     }
   };
