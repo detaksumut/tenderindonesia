@@ -4754,10 +4754,10 @@ export default function App() {
                   </div>
                   <div className="mt-4 flex gap-2">
                     <button
-                      onClick={() => setActiveTab('rab')}
+                      onClick={() => setActiveTab('mockup')}
                       className="px-4 py-2.5 bg-[#ff2a42] text-xs font-bold text-white rounded-lg hover:bg-red-700 transition cursor-pointer select-none"
                     >
-                      Buka Unggah &amp; Analisa RAB / BQ →
+                      Mulai Langkah 1: Unggah Gambar Proyek →
                     </button>
                   </div>
                 </div>
