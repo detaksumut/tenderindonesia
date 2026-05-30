@@ -191,32 +191,13 @@ export default function App() {
     const currentLicense = localStorage.getItem('tii_license_key');
     
     if (currentLicense === validLicense) {
-      let currentApiKey = apiKey || localStorage.getItem('gemini_api_key');
-      if (!currentApiKey) {
-        setAccessMode('apikey');
-        setAccessInput("");
-        setAccessError("");
-        setPendingAction(() => action);
-        setShowAccessModal(true);
-      } else {
-        action();
-      }
+      action();
       return;
     }
 
     const trialCount = parseInt(localStorage.getItem('tii_trial_count') || "0");
     if (trialCount >= 5) {
       setAccessMode('license');
-      setAccessInput("");
-      setAccessError("");
-      setPendingAction(() => action);
-      setShowAccessModal(true);
-      return;
-    }
-
-    let currentApiKey = apiKey || localStorage.getItem('gemini_api_key');
-    if (!currentApiKey) {
-      setAccessMode('apikey');
       setAccessInput("");
       setAccessError("");
       setPendingAction(() => action);
