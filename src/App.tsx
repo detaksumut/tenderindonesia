@@ -6273,26 +6273,36 @@ export default function App() {
         {/* Trial & License Modal Paywall */}
         {showAccessModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-            <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full p-6 shadow-2xl relative">
+            <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full p-6 shadow-2xl relative animate-fade-in">
               <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">
-                {accessMode === 'apikey' ? "Sistem Menunggu API Key" : "Lisensi VIP Dibutuhkan"}
+                {accessMode === 'apikey' 
+                  ? "Sistem Menunggu API Key" 
+                  : accessMode === 'upgrade_suggestion' 
+                    ? "Aktivasi Lisensi VIP Berhasil! 🎉" 
+                    : "Lisensi VIP Dibutuhkan"}
               </h3>
-              <p className="text-sm text-slate-400 mb-6">
+              <p className="text-sm text-slate-400 mb-6 leading-relaxed">
                 {accessMode === 'apikey' 
                   ? "Sistem membutuhkan API Key Google Gemini (AI Studio) untuk memproses analisis dokumen. Anda memiliki jatah uji coba gratis 5 kali eksekusi setelah memasukkan key ini."
-                  : "Batas 5 kali uji coba gratis Anda telah habis. Silakan masukkan License Key Premium untuk melanjutkan akses penuh (Unlimited) ke sistem Tender Intelligence."}
+                  : accessMode === 'upgrade_suggestion'
+                    ? "Lisensi Anda telah aktif! Untuk kenyamanan, kestabilan, dan kecepatan analisis maksimal tanpa hambatan antrean kuota bersama, kami menyarankan Anda memasukkan API Key Gemini pribadi Anda sendiri. Tenang saja, Google menyediakannya secara 100% gratis!"
+                    : "Batas 5 kali uji coba gratis Anda telah habis. Silakan masukkan License Key Premium untuk melanjutkan akses penuh (Unlimited) ke sistem Tender Intelligence."}
               </p>
               
               <div className="mb-4">
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
-                  {accessMode === 'apikey' ? "Masukkan API Key Anda" : "Masukkan License Key"}
+                  {accessMode === 'apikey' 
+                    ? "Masukkan API Key Anda" 
+                    : accessMode === 'upgrade_suggestion'
+                      ? "Masukkan API Key Gemini Pribadi (Opsional)"
+                      : "Masukkan License Key"}
                 </label>
                 <input 
-                  type={accessMode === 'apikey' ? "password" : "text"}
+                  type={accessMode === 'license' ? "text" : "password"}
                   value={accessInput}
                   onChange={e => setAccessInput(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
-                  placeholder={accessMode === 'apikey' ? "AIzaSy..." : "TENDER-PRO-..."}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors font-mono"
+                  placeholder={accessMode === 'license' ? "TENDER-PRO-..." : "AIzaSy..."}
                 />
                 {accessError && <p className="text-xs text-red-500 mt-2 font-bold">{accessError}</p>}
                 
@@ -6333,16 +6343,24 @@ export default function App() {
               <div className="flex gap-3 justify-end mt-8">
                 <button 
                   onClick={() => {
-                    setShowAccessModal(false);
-                    setPendingAction(null);
+                    if (accessMode === 'upgrade_suggestion') {
+                      setShowAccessModal(false);
+                      if (pendingAction) {
+                        pendingAction();
+                        setPendingAction(null);
+                      }
+                    } else {
+                      setShowAccessModal(false);
+                      setPendingAction(null);
+                    }
                   }}
-                  className="px-4 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors"
+                  className="px-4 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors cursor-pointer"
                 >
-                  Batal
+                  {accessMode === 'upgrade_suggestion' ? "Lewati (API Bawaan)" : "Batal"}
                 </button>
                 <button 
                   onClick={() => {
-                    if (!accessInput.trim()) {
+                    if (accessMode !== 'upgrade_suggestion' && !accessInput.trim()) {
                       setAccessError(accessMode === 'apikey' ? "API Key tidak boleh kosong!" : "License Key tidak boleh kosong!");
                       return;
                     }
@@ -6351,10 +6369,19 @@ export default function App() {
                       setApiKey(accessInput.trim());
                       try { localStorage.setItem('gemini_api_key', accessInput.trim()); } catch (e) {}
                       setShowAccessModal(false);
-                      // Lanjut ke pendingAction
                       if (pendingAction) {
                         const trialCount = parseInt(localStorage.getItem('tii_trial_count') || "0");
                         localStorage.setItem('tii_trial_count', (trialCount + 1).toString());
+                        pendingAction();
+                        setPendingAction(null);
+                      }
+                    } else if (accessMode === 'upgrade_suggestion') {
+                      if (accessInput.trim()) {
+                        setApiKey(accessInput.trim());
+                        try { localStorage.setItem('gemini_api_key', accessInput.trim()); } catch (e) {}
+                      }
+                      setShowAccessModal(false);
+                      if (pendingAction) {
                         pendingAction();
                         setPendingAction(null);
                       }
@@ -6362,11 +6389,10 @@ export default function App() {
                       if (accessInput.trim() === "TENDER-PRO-VIP") {
                         try { localStorage.setItem('tii_license_key', accessInput.trim()); } catch (e) {}
                         
-                        // Check if they already have an API key configured
                         let currentApiKey = apiKey || localStorage.getItem('gemini_api_key');
                         if (!currentApiKey) {
-                          // Transition to API Key mode directly so they can input it in the same modal!
-                          setAccessMode('apikey');
+                          // Transition to congratulations and upgrade recommendation popup step!
+                          setAccessMode('upgrade_suggestion');
                           setAccessInput("");
                           setAccessError("");
                         } else {
@@ -6381,9 +6407,9 @@ export default function App() {
                       }
                     }
                   }}
-                  className="px-6 py-2 text-sm font-bold bg-red-600 hover:bg-red-500 text-white rounded-lg shadow-lg shadow-red-900/50 transition-all active:scale-95"
+                  className="px-6 py-2 text-sm font-bold bg-red-600 hover:bg-red-500 text-white rounded-lg shadow-lg shadow-red-900/50 transition-all active:scale-95 cursor-pointer"
                 >
-                  Konfirmasi
+                  {accessMode === 'upgrade_suggestion' ? "Simpan & Luncurkan" : "Konfirmasi"}
                 </button>
               </div>
             </div>
