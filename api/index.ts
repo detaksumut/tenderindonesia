@@ -14,25 +14,29 @@ import { EstimationResult, RABGroup, RABItem, AuditAnomaly, AHSPTemplate } from 
 // In-memory cache for stable session consistency (returns identical result for same files and properties)
 const analysisCache = new Map<string, any>();
 
-// Lazy-loaded Gemini AI client helper
-let aiClient: GoogleGenAI | null = null;
+// Lazy-loaded Gemini AI client helper (for env key)
+let defaultAiClient: GoogleGenAI | null = null;
 
-function getAIClient(): GoogleGenAI {
-  if (!aiClient) {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key || key === "MY_GEMINI_API_KEY") {
-      throw new Error("GEMINI_API_KEY is not configured. Please open Settings > Secrets and add your real key.");
-    }
-    aiClient = new GoogleGenAI({
-      apiKey: key,
-      httpOptions: {
-        headers: {
-          "User-Agent": "aistudio-build",
-        }
-      }
+function getAIClient(clientKey?: string): GoogleGenAI {
+  const keyToUse = clientKey || process.env.GEMINI_API_KEY;
+  if (!keyToUse || keyToUse === "MY_GEMINI_API_KEY") {
+    throw new Error("GEMINI_API_KEY is not configured.");
+  }
+  
+  if (clientKey) {
+    return new GoogleGenAI({
+      apiKey: clientKey,
+      httpOptions: { headers: { "User-Agent": "aistudio-build" } }
     });
   }
-  return aiClient;
+
+  if (!defaultAiClient) {
+    defaultAiClient = new GoogleGenAI({
+      apiKey: keyToUse,
+      httpOptions: { headers: { "User-Agent": "aistudio-build" } }
+    });
+  }
+  return defaultAiClient;
 }
 
 const app = express();
@@ -142,48 +146,57 @@ function performLocalRuleEstimation(
   // If text is empty or has no letters/numbers, fall back to a rich default set
   if (!textToParse || textToParse.trim().length < 5 || !/\d/.test(textToParse)) {
     textToParse = `DAFTAR KUANTITAS DAN HARGA
-Nama Paket: Rehabilitasi Trotoar - Pembetonan Trotoar Dan Median Jalan di Jl. Krakatau Kec. Medan Timur
-Prop / Kab / Kodya: Pemko Medan
-Nilai Pagu Proyek: Rp 5.099.999.998
+Nama Paket: Pembangunan Gedung Baru / ${metaProjectName || 'Proyek Default'}
+Prop / Kab / Kodya: ${metaLocation || 'Kota Default'}
+Nilai Pagu Proyek: Rp ${metaPagu || 1500000000}
 Tahun Acuan: 2024
 
-DIVISI 1. UMUM
-1.2 Mobilisasi - 1,00 Ls
-1.7 Mobilisasi - 1,00 Ls
-1.19 Keselamatan dan Kesehatan Kerja - 1,00 LS
+DIVISI 1. PEKERJAAN PERSIAPAN
+1.1 Pembersihan Lahan - 1,00 Ls
+1.2 Pemasangan Bowplank - 50,00 M¹
+1.3 Direksi Keet - 1,00 Ls
+1.4 Keselamatan dan Kesehatan Kerja (K3) - 1,00 Ls
 
-DIVISI 2. DRAINASE
-2.1(1a) Galian untuk Selokan Drainase dan Saluran Air Menggunakan Buruh - 84,83 M³
+DIVISI 2. PEKERJAAN TANAH DAN PONDASI
+2.1 Galian Tanah Pondasi - 45,50 M³
+2.2 Urugan Pasir Bawah Pondasi - 5,00 M³
+2.3 Pondasi Tapak (Footplate) Beton K-225 - 12,50 M³
+2.4 Pondasi Batu Kali - 25,00 M³
+2.5 Urugan Tanah Kembali - 15,00 M³
 
-DIVISI 3. PEKERJAAN TANAH DAN GEOSINTETIK
-3.1(1) Galian Biasa dengan menggunakan buruh - 105,11 M³
+DIVISI 3. PEKERJAAN STRUKTUR BETON
+3.1 Sloof Beton K-225 - 8,50 M³
+3.2 Kolom Beton K-225 - 10,20 M³
+3.3 Balok Beton K-225 - 9,80 M³
+3.4 Plat Lantai Beton K-225 - 15,50 M³
+3.5 Pembesian dengan Besi Polos/Ulir - 4500,50 Kg
+3.6 Bekisting Struktur - 350,00 M²
 
-DIVISI 7. STRUKTUR
-7.1 (8) Beton fc'15 Mpa, untuk slab drainase - 7,68 M³
-7.1 (8a) Beton fc'15 Mpa, untuk lajur drainase - 1,15 M³
-7.1 (8b) Beton fc'15 Mpa, untuk kanal trotoar - 265,64 M³
-7.1 (9) Baja Tulangan Polos BJTP 280 - 615,22 Kg
-7.15(2) Pembongkaran Beton dan Pembuangan - 129,32 M³
-7.15(2a) Pembongkaran Kerb Lama dan Pembuangan - 68,37 M³
-7.16(3a) Pipa Drainase PVC diameter 150 mm - 296,56 M¹
+DIVISI 4. PEKERJAAN DINDING DAN PLESTERAN
+4.1 Pasangan Dinding Bata Merah (1:4) - 250,00 M²
+4.2 Plesteran Dinding (1:4) tebal 15mm - 500,00 M²
+4.3 Acian Dinding - 500,00 M²
 
-DIVISI 9. PEKERJAAN HARIAN & PEKERJAAN LAIN-LAIN
-9.2 (10a) Kerb Pracetak Jenis 2 (Penghalang/Barrier) - 954,00 M¹
-9.2 (10c) Kerb Pracetak Jenis 3 (Peninggian) - 742,00 M¹
-9.2 (10d) Kerb Pracetak Jenis 4 (Jalan Masuk) - 107,00 M¹
-9.2 (10e) Kerb Pracetak Jenis 7 (Pelandaiian) - 18,00 Buah
-Tambahan 1 Inlet Taman Composite Thermoset Fiberglass - 166,00 Buah
-Tambahan 2 Rectangular Manhole 2 Pintu Composite Thermoset Fiberglass - 166,00 Unit
-Tambahan 3 Perundangan Baja Belum Tiang Reklame - 1,00 Ls
+DIVISI 5. PEKERJAAN KUSEN, PINTU, DAN JENDELA
+5.1 Kusen Pintu dan Jendela Aluminium - 85,00 M¹
+5.2 Daun Pintu Panel Kayu - 12,00 Buah
+5.3 Daun Jendela Kaca - 18,00 Buah
+5.4 Kaca Bening 5mm - 25,00 M²
 
-DIVISI 10. PEKERJAAN PEMELIHARAAN KINERJA
-10.1(17) Pengecatan Kerb pada Trotoar atau Median - 1172,25 M²
-10.1(17a) Pengecatan Coating Lantai Trotoar - 2656,41 M²
-A.4.4.2.27 Pekerjaan Acian Modif Lantai Trotoar - 2656,41 M²
-T.1ab Timbunan tanah atau urug tanah kembali termasuk perataan dan pemadatan - 17,70 M³
-T.1ab Pemadatan tanah termasuk perataan dan pemadatan - 17,70 M³
-A.4.4.3.9 Pemasangan Lantai Pemandu Orang Buta Composite Thermoset Fiberglass - 266,10 M²`;
+DIVISI 6. PEKERJAAN RANGKA ATAP DAN PENUTUP ATAP
+6.1 Rangka Atap Baja Ringan - 150,00 M²
+6.2 Penutup Atap Genteng Metal - 150,00 M²
+6.3 Bubungan Atap - 20,00 M¹
+6.4 Listplank Kayu/GRC - 45,00 M¹
+
+DIVISI 7. PEKERJAAN FINISHING DAN PENGECATAN
+7.1 Pengecatan Dinding Interior (3 Lapis) - 250,00 M²
+7.2 Pengecatan Dinding Eksterior (Weathershield) - 250,00 M²
+7.3 Pengecatan Plafon - 150,00 M²
+7.4 Pasang Lantai Keramik 60x60 cm - 145,00 M²
+7.5 Pasang Keramik Kamar Mandi / Toilet - 25,00 M²`;
   }
+
 
   const lines = textToParse.split("\n").map(l => l.trim()).filter(l => l.length > 0);
 
@@ -769,7 +782,8 @@ app.post("/api/analyze", async (req, res) => {
       luasDinding,
       luasAtap,
       mockupImages,
-      takeoffSheets
+      takeoffSheets,
+      apiKey
     } = req.body;
     const selectedRegion = region || "DKI Jakarta";
 
@@ -807,7 +821,7 @@ app.post("/api/analyze", async (req, res) => {
 
     let hasKey = true;
     try {
-      getAIClient();
+      getAIClient(apiKey);
     } catch (e) {
       hasKey = false;
     }
@@ -901,14 +915,14 @@ C. INFORMASI PENYELARAS IDENTITAS & PAGU PENAWARAN (WAJIB DIIKUTI PERSIS):
 - Nilai Pagu Proyek: Rp ${metaPagu ? Number(metaPagu).toLocaleString("id-ID") : "Sesuai dokumen asli"}
 
 D. ACUAN BENCHMARK DAERAH (SSH REGIONAL & STANDAR HARGA PEMDA):
-Gunakan referensi berikut sebagai basis penetapan harga satuan kontraktor yang kompetitif dan wajar:
+Gunakan referensi berikut sebagai basis penetapan harga satuan.
 ---
 ${groundingContext}
 ---
 
 INSTRUKSI INTEGRASI & PENYUSUNAN RAB:
-1. Hasilkan tabel penawaran RAB untuk kontraktor. Tiap item pekerjaan yang diekstrak wajib berisi Harga Satuan Usulan (unitPrice) dan Total Price asli (volume * unitPrice) secara lengkap sesuai angka asli di dokumen atau estimasi wajar jika kosong. JANGAN menuliskan harga 0 atau kosong!
-2. Setel harga penawaran kontraktor tersebut dengan cermat agar total biaya penawaran (totalCostOriginal) nilainya kompetitif, realistis, dan aman di bawah batasan Nilai Pagu Proyek (projectCeiling).
+1. Hasilkan tabel penawaran RAB untuk kontraktor. Tiap item pekerjaan yang diekstrak wajib berisi Harga Satuan Usulan (unitPrice) dan Total Price asli secara lengkap. JANGAN menuliskan harga 0 atau kosong!
+2. PRINSIP HARGA TERENDAH: Dalam mengisi/mengestimasi harga penawaran (unitPrice) maupun estimasi wajar (estimatedUnitPrice), Anda WAJIB mengambil harga dasar terendah (lowest price) yang sah dari data SSH/AHSP Pemda terkait, TANPA menambahkan markup margin profit berlebihan. Selalu susun penawaran harga paling minimal namun tetap logis dan tidak melanggar standar batas bawah SNI agar kompetitif dalam pelelangan.
 3. Hasilkan juga kolom 'estimatedUnitPrice' dan 'estimatedTotalPrice' berdasarkan batas acuan SSH Pemda yang sah di daerah terlampir untuk membuktikan kepatuhan harga Anda.
 4. Tentukan status kelayakan harga satuan kontraktor terhadap SSH:
    - "SESUAI": Harga usulan kontraktor kompetitif dan berada dalam batas kewajaran pemerintah daerah (< SSH + 10% overhead).
@@ -924,22 +938,13 @@ ${takeoffSheetsInfo}
 `;
 
     if (!hasKey) {
-      // Local rules-based analysis fallback when Gemini is unavailable.
-      const localResult = performLocalRuleEstimation(
-        textContent || "Pembersihan lapangan dsb.", 
-        selectedRegion,
-        metaProjectName,
-        metaLocation,
-        metaPagu
-      );
-      return res.json({
-        ...localResult,
-        warning: "Menjalankan Estimator Mesin berbasis aturan SSH PUPR Regional (Gemini API Key belum terpasang di Settings > Secrets)."
+      return res.status(400).json({
+        error: "API Key Gemini belum disetel. Harap masukkan API Key Anda di pengaturan sistem (atau file .env) agar AI dapat menganalisis dokumen Anda secara nyata. Kami tidak lagi menggunakan data dummy simulasi."
       });
     }
 
     try {
-      const ai = getAIClient();
+      const ai = getAIClient(apiKey);
 
       let geminiContents: any[] = [];
       if (fileData && fileMimeType) {

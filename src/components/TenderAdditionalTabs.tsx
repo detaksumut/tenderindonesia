@@ -1517,6 +1517,32 @@ export function MockupDesainView({
     }
   };
 
+  // Reset numeric values to zero without deleting photos
+  const handleResetNumbersToZero = () => {
+    if (window.confirm("Apakah Anda yakin ingin meng-nol-kan semua angka hitungan (panjang, lebar, area, volume) tanpa menghapus baris dan fotonya?")) {
+      const updated = sheets.map(s => ({
+        ...s,
+        length: 0,
+        width: 0,
+        thickness: 0,
+        area: 0,
+        volume: 0
+      }));
+      saveToLocalStorage(updated);
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 2000);
+    }
+  };
+
+  // Clear all data (delete all rows and images, reset to absolute zero)
+  const handleClearAllData = () => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus SEMUA baris gambar dan mereset total menjadi nol? Tabel akan dikosongkan.")) {
+      saveToLocalStorage([]);
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 2000);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 animate-fade-in text-left font-sans" id="mockup-view-main">
       
@@ -1586,6 +1612,24 @@ export function MockupDesainView({
             </button>
           </div>
         </div>
+      </div>
+
+      {/* QUICK ACTIONS ROW (ABOVE METRICS) */}
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        <button
+          onClick={handleClearAllData}
+          className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-bold text-[11px] rounded-lg transition-all shadow-sm flex items-center gap-1.5 cursor-pointer select-none active:scale-95 border border-red-200"
+          title="Hapus seluruh tabel dan gambar agar kosong"
+        >
+          <Trash2 className="h-3.5 w-3.5" /> Start New
+        </button>
+        <button
+          onClick={handleResetNumbersToZero}
+          className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[11px] rounded-lg transition-all shadow-sm flex items-center gap-1.5 cursor-pointer select-none active:scale-95 border border-amber-600"
+          title="Reset angka menjadi 0 tanpa menghapus gambar"
+        >
+          <RefreshCw className="h-3.5 w-3.5" /> Kosongkan Angka / Gambar
+        </button>
       </div>
 
       {/* AGGREGATED SPATIAL DYNAMIC METRICS BOARD */}

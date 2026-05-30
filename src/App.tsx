@@ -178,6 +178,55 @@ export default function App() {
   const [boqFileUploaded, setBoqFileUploaded] = useState<boolean>(false);
   const [rabUploadError, setRabUploadError] = useState<string>('');
   const [boqUploadError, setBoqUploadError] = useState<string>('');
+
+  // Licensing and Trial State
+  const [showAccessModal, setShowAccessModal] = useState<boolean>(false);
+  const [accessMode, setAccessMode] = useState<'apikey' | 'license'>('apikey');
+  const [accessInput, setAccessInput] = useState<string>('');
+  const [accessError, setAccessError] = useState<string>('');
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+
+  const checkAccessAndExecute = (action: () => void) => {
+    const validLicense = "TENDER-PRO-VIP";
+    const currentLicense = localStorage.getItem('tii_license_key');
+    
+    if (currentLicense === validLicense) {
+      let currentApiKey = apiKey || localStorage.getItem('gemini_api_key');
+      if (!currentApiKey) {
+        setAccessMode('apikey');
+        setAccessInput("");
+        setAccessError("");
+        setPendingAction(() => action);
+        setShowAccessModal(true);
+      } else {
+        action();
+      }
+      return;
+    }
+
+    const trialCount = parseInt(localStorage.getItem('tii_trial_count') || "0");
+    if (trialCount >= 5) {
+      setAccessMode('license');
+      setAccessInput("");
+      setAccessError("");
+      setPendingAction(() => action);
+      setShowAccessModal(true);
+      return;
+    }
+
+    let currentApiKey = apiKey || localStorage.getItem('gemini_api_key');
+    if (!currentApiKey) {
+      setAccessMode('apikey');
+      setAccessInput("");
+      setAccessError("");
+      setPendingAction(() => action);
+      setShowAccessModal(true);
+      return;
+    }
+
+    localStorage.setItem('tii_trial_count', (trialCount + 1).toString());
+    action();
+  };
   
   // Custom BI News Logo Upload state & handlers
   const [useFallbackSvg, setUseFallbackSvg] = useState<boolean>(false);
@@ -225,11 +274,28 @@ export default function App() {
   const [metaPagu, setMetaPagu] = useState<number>(0);
   const [metaYear, setMetaYear] = useState<string>('2025');
 
+  // API Key state for dynamic Gemini assignment
+  const [apiKey, setApiKey] = useState<string>(() => {
+    try {
+      return localStorage.getItem('gemini_api_key') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setApiKey(val);
+    try {
+      localStorage.setItem('gemini_api_key', val);
+    } catch {}
+  };
+
   // Best practice states: real computation result without mocks
   const [result, setResult] = useState<EstimationResult | null>(null);
 
   const setNormalizedResult = (data: any) => {
-    if (!data) {
+    if (!data || !data.groups || !Array.isArray(data.groups)) {
       setResult(null);
       return;
     }
@@ -323,7 +389,7 @@ export default function App() {
       }
     } catch (e) {
       console.error("Gagal melakukan normalisasi data RAB:", e);
-      setResult(data);
+      setResult(null);
     }
   };
 
@@ -685,6 +751,22 @@ export default function App() {
     setActiveTab('rab');
   };
 
+  const extractExcelText = (base64String: string): string => {
+    try {
+      const workbook = XLSX.read(base64String, { type: 'base64' });
+      let allText = "";
+      workbook.SheetNames.forEach(sheetName => {
+        allText += `\n--- Sheet: ${sheetName} ---\n`;
+        const worksheet = workbook.Sheets[sheetName];
+        allText += XLSX.utils.sheet_to_csv(worksheet);
+      });
+      return allText;
+    } catch (e) {
+      console.error("Failed to parse Excel on client:", e);
+      return "";
+    }
+  };
+
   // Convert uploaded image or spreadsheet file to Base64
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -706,8 +788,15 @@ export default function App() {
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = (reader.result as string).split(',')[1];
-        setFileBase64(base64String);
-        setFileMimeType(selectedFile.type);
+        setFileBase64(isExcel ? '' : base64String); // Do not send Excel binary to Gemini
+        setFileMimeType(isExcel ? '' : selectedFile.type);
+        
+        if (isExcel) {
+          const csvText = extractExcelText(base64String);
+          if (csvText) {
+             setInputText(prev => prev ? prev + "\n" + csvText : csvText);
+          }
+        }
       };
       reader.readAsDataURL(selectedFile);
     }
@@ -738,8 +827,15 @@ export default function App() {
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = (reader.result as string).split(',')[1];
-        setFileBase64(base64String);
-        setFileMimeType(droppedFile.type);
+        setFileBase64(isExcel ? '' : base64String); // Do not send Excel binary to Gemini
+        setFileMimeType(isExcel ? '' : droppedFile.type);
+
+        if (isExcel) {
+          const csvText = extractExcelText(base64String);
+          if (csvText) {
+             setInputText(prev => prev ? prev + "\n" + csvText : csvText);
+          }
+        }
       };
       reader.readAsDataURL(droppedFile);
     }
@@ -895,7 +991,9 @@ export default function App() {
   };
 
   // Process core analysis
-  const handleAnalyze = async (isInitial = false) => {
+  const executeHandleAnalyze = async (isInitial = false) => {
+    let currentApiKey = apiKey || localStorage.getItem('gemini_api_key') || "";
+
     setLoading(true);
     setWarningMessage('');
     try {
@@ -973,12 +1071,18 @@ export default function App() {
             area: s.area,
             volume: s.volume,
             components: s.components
-          }))
+          })),
+          apiKey: currentApiKey
         })
       });
 
       if (!response.ok) {
-        throw new Error("Gagal mengolah dokumen konstruksi.");
+        let errMsg = "Gagal mengolah dokumen konstruksi.";
+        try {
+          const errData = await response.json();
+          if (errData.error) errMsg = errData.error;
+        } catch (e) {}
+        throw new Error(errMsg);
       }
 
       const data = await response.json();
@@ -1012,11 +1116,20 @@ export default function App() {
       console.error(err);
       alert("Error: " + err.message);
     } finally {
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleDirectBoqUpload = async (selectedFile: File) => {
+  const handleAnalyze = (isInitial = false) => {
+    checkAccessAndExecute(() => executeHandleAnalyze(isInitial));
+  };
+
+  const handleDirectBoqUpload = (f: File) => {
+    checkAccessAndExecute(() => executeHandleDirectBoqUpload(f));
+  };
+
+  const executeHandleDirectBoqUpload = async (selectedFile: File) => {
     const name = selectedFile.name.toLowerCase();
     const isExcel = name.endsWith('.xlsx') || name.endsWith('.xls') || selectedFile.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || selectedFile.type === 'application/vnd.ms-excel';
     const isImage = selectedFile.type.startsWith('image/');
@@ -1025,6 +1138,9 @@ export default function App() {
       setBoqUploadError('Berkas BoQ Kosong wajib dalam format Excel (.xlsx / .xls). Gambar/Foto tetap diperbolehkan. Jika berkas Anda dari panitia berupa format PDF, silakan konversikan terlebih dahulu ke format Excel sebelum diunggah agar AI dapat menyinkronkan seluruh harga penawaran rill Anda secara presisi 100%!');
       return;
     }
+
+    let currentApiKey = apiKey || localStorage.getItem('gemini_api_key') || "";
+
     
     setBoqUploadError('');
     setAnalyzingBoq(true);
@@ -1081,15 +1197,20 @@ export default function App() {
         }
         setSelectedRegion(activeReg);
 
+        let extractedText = "";
+        if (isExcel) {
+          extractedText = extractExcelText(base64String);
+        }
+
         const response = await fetch("/api/analyze", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            textContent: "",
-            fileData: base64String,
-            fileMimeType: selectedFile.type,
+            textContent: extractedText || "",
+            fileData: isExcel ? undefined : base64String,
+            fileMimeType: isExcel ? undefined : selectedFile.type,
             region: activeReg,
             metaProjectName: predictedProjectName,
             metaLocation: metaLocation || activeLoc,
@@ -1112,12 +1233,18 @@ export default function App() {
               area: s.area,
               volume: s.volume,
               components: s.components
-            }))
+            })),
+            apiKey: currentApiKey
           })
         });
 
         if (!response.ok) {
-          throw new Error("Gagal mengurai.");
+          let errMsg = "Gagal mengurai.";
+          try {
+            const errData = await response.json();
+            if (errData.error) errMsg = errData.error;
+          } catch (e) {}
+          throw new Error(errMsg);
         }
 
         const data = await response.json();
@@ -1214,7 +1341,8 @@ export default function App() {
               pondasi,
               luasDinding,
               luasAtap,
-              mockupImages: offlineMockupImages
+              mockupImages: offlineMockupImages,
+              apiKey: currentApiKey || apiKey
             })
           }).then(r => r.json()).then(data => {
             setNormalizedResult(data);
@@ -1260,6 +1388,8 @@ export default function App() {
       }
     } catch (e) {}
 
+    let currentApiKey = apiKey || localStorage.getItem('gemini_api_key') || "";
+
     try {
       const response = await fetch("/api/analyze", {
         method: "POST",
@@ -1274,14 +1404,14 @@ export default function App() {
           metaPagu: sampleType === 'bpbd' ? 1139000000 : 850000000,
           metaYear,
           blueprintWidth,
-          blueprintLength,
           blueprintFloors,
           luasBangunan,
           jumlahRuangan,
           pondasi,
           luasDinding,
           luasAtap,
-          mockupImages
+          mockupImages,
+          apiKey: currentApiKey || apiKey
         })
       });
 
@@ -1348,6 +1478,10 @@ export default function App() {
         setAnalyzingBoq(false);
       }, 1500);
     }
+  };
+
+  const handleDirectBoqSample = () => {
+    checkAccessAndExecute(() => executeHandleDirectBoqSample());
   };
 
   useEffect(() => {
@@ -4162,8 +4296,8 @@ export default function App() {
 
   // Shared calculations for dynamic pricing and margins
   const multiplier = 1 + (adjustmentPercent / 100);
-  const totalCostOriginalAdjusted = result ? result.groups.reduce((sumG, g) => {
-    return sumG + g.items.reduce((sumI, it) => {
+  const totalCostOriginalAdjusted = (result && result.groups) ? result.groups.reduce((sumG, g) => {
+    return sumG + (g.items || []).reduce((sumI, it) => {
       const calibrated = getCalibratedItem(it);
       return sumI + calibrated.totalPrice;
     }, 0);
@@ -4177,16 +4311,18 @@ export default function App() {
 
   let totalItemsCount = 0;
   let withinSshCount = 0;
-  if (result) {
+  if (result && result.groups) {
     result.groups.forEach((group: RABGroup) => {
-      group.items.forEach((item: RABItem) => {
-        totalItemsCount++;
-        const calibrated = getCalibratedItem(item);
-        const adjustedUnit = calibrated.unitPrice;
-        if (adjustedUnit <= item.estimatedUnitPrice) {
-          withinSshCount++;
-        }
-      });
+      if (group.items) {
+        group.items.forEach((item: RABItem) => {
+          totalItemsCount++;
+          const calibrated = getCalibratedItem(item);
+          const adjustedUnit = calibrated.unitPrice;
+          if (adjustedUnit <= item.estimatedUnitPrice) {
+            withinSshCount++;
+          }
+        });
+      }
     });
   }
   const complianceSSHScore = totalItemsCount > 0 ? Math.round((withinSshCount / totalItemsCount) * 100) : 100;
@@ -4266,6 +4402,18 @@ export default function App() {
                 placeholder="Cari tender atau instansi..." 
                 className="w-full pl-9 pr-3 py-1.5 text-xs bg-zinc-900 border border-zinc-800 rounded-lg text-slate-200 placeholder-zinc-500 focus:outline-hidden focus:ring-1 focus:ring-red-500 focus:border-red-500"
                 id="header-mockup-search"
+              />
+            </div>
+
+            {/* API Key Input */}
+            <div className="flex items-center bg-zinc-900 text-zinc-300 rounded-lg py-1 px-2 border border-zinc-800 shrink-0">
+              <span className="text-[10px] text-zinc-500 font-bold mr-1">API KEY:</span>
+              <input 
+                type="password"
+                className="bg-transparent border-0 text-[11px] font-bold text-zinc-200 focus:ring-0 w-20 sm:w-28 outline-none placeholder-zinc-700"
+                placeholder="Tempel Key..."
+                value={apiKey}
+                onChange={handleApiKeyChange}
               />
             </div>
 
@@ -6109,6 +6257,82 @@ export default function App() {
           )}
         </section>
 
+        {/* Trial & License Modal Paywall */}
+        {showAccessModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+            <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full p-6 shadow-2xl relative">
+              <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">
+                {accessMode === 'apikey' ? "Sistem Menunggu API Key" : "Lisensi VIP Dibutuhkan"}
+              </h3>
+              <p className="text-sm text-slate-400 mb-6">
+                {accessMode === 'apikey' 
+                  ? "Sistem membutuhkan API Key Google Gemini (AI Studio) untuk memproses analisis dokumen. Anda memiliki jatah uji coba gratis 5 kali eksekusi setelah memasukkan key ini."
+                  : "Batas 5 kali uji coba gratis Anda telah habis. Silakan masukkan License Key Premium untuk melanjutkan akses penuh (Unlimited) ke sistem Tender Intelligence."}
+              </p>
+              
+              <div className="mb-4">
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                  {accessMode === 'apikey' ? "Masukkan API Key Anda" : "Masukkan License Key"}
+                </label>
+                <input 
+                  type={accessMode === 'apikey' ? "password" : "text"}
+                  value={accessInput}
+                  onChange={e => setAccessInput(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors"
+                  placeholder={accessMode === 'apikey' ? "AIzaSy..." : "TENDER-PRO-..."}
+                />
+                {accessError && <p className="text-xs text-red-500 mt-2 font-bold">{accessError}</p>}
+              </div>
+              
+              <div className="flex gap-3 justify-end mt-8">
+                <button 
+                  onClick={() => {
+                    setShowAccessModal(false);
+                    setPendingAction(null);
+                  }}
+                  className="px-4 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors"
+                >
+                  Batal
+                </button>
+                <button 
+                  onClick={() => {
+                    if (!accessInput.trim()) {
+                      setAccessError(accessMode === 'apikey' ? "API Key tidak boleh kosong!" : "License Key tidak boleh kosong!");
+                      return;
+                    }
+                    
+                    if (accessMode === 'apikey') {
+                      setApiKey(accessInput.trim());
+                      try { localStorage.setItem('gemini_api_key', accessInput.trim()); } catch (e) {}
+                      setShowAccessModal(false);
+                      // Lanjut ke pendingAction
+                      if (pendingAction) {
+                        const trialCount = parseInt(localStorage.getItem('tii_trial_count') || "0");
+                        localStorage.setItem('tii_trial_count', (trialCount + 1).toString());
+                        pendingAction();
+                        setPendingAction(null);
+                      }
+                    } else {
+                      if (accessInput.trim() === "TENDER-PRO-VIP") {
+                        try { localStorage.setItem('tii_license_key', accessInput.trim()); } catch (e) {}
+                        setShowAccessModal(false);
+                        if (pendingAction) {
+                          pendingAction();
+                          setPendingAction(null);
+                        }
+                      } else {
+                        setAccessError("License Key tidak valid! Hubungi administrator.");
+                      }
+                    }
+                  }}
+                  className="px-6 py-2 text-sm font-bold bg-red-600 hover:bg-red-500 text-white rounded-lg shadow-lg shadow-red-900/50 transition-all active:scale-95"
+                >
+                  Konfirmasi
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
       </div>
 
