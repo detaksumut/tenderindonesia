@@ -6302,7 +6302,7 @@ export default function App() {
                   value={accessInput}
                   onChange={e => setAccessInput(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors font-mono"
-                  placeholder={accessMode === 'license' ? "TENDER-PRO-..." : "AIzaSy..."}
+                  placeholder={accessMode === 'license' ? "TENDER-PRO-..." : "Tempel API Key Anda di sini..."}
                 />
                 {accessError && <p className="text-xs text-red-500 mt-2 font-bold">{accessError}</p>}
                 
