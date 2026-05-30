@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { RegionalStandard, AHSPTemplate } from './types';
+import { RegionalStandard, AHSPTemplate } from './types.ts';
 
 export const REGIONAL_STANDARDS: RegionalStandard[] = [
   {
