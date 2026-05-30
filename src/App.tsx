@@ -4799,7 +4799,7 @@ export default function App() {
                   </div>
 
                 </div>
-                <p className="text-[10px] text-slate-400 mt-3 font-normal leading-relaxed">
+                <p className="text-xs text-slate-500 mt-3 font-medium leading-relaxed">
                   ⚡ Referensi: Perpres No. 16/2018 tentang Pengadaan Barang/Jasa Pemerintah, Permen PUPR No. 1/2022 tentang Pedoman Penyusunan AHSP, dan SSH Provinsi/Kabupaten/Kota masing-masing wilayah yang berlaku.
                 </p>
               </div>
