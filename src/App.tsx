@@ -6267,19 +6267,30 @@ export default function App() {
                 />
                 {accessError && <p className="text-xs text-red-500 mt-2 font-bold">{accessError}</p>}
                 
-                {accessMode === 'apikey' && (
-                  <div className="mt-3 text-[11px] text-slate-400 leading-normal">
-                    Belum punya API Key? Dapatkan secara gratis &amp; instan di{" "}
-                    <a 
-                      href="https://aistudio.google.com/app/apikey" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-cyan-450 hover:text-cyan-350 font-extrabold underline inline-flex items-center gap-0.5"
-                    >
-                      Google AI Studio ↗
-                    </a>
+                <div className="mt-5 pt-4 border-t border-slate-800/80 space-y-3">
+                  <div className="flex items-center gap-2 text-xs text-slate-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>Butuh API Key Gemini? Dapatkan secara gratis &amp; instan di:</span>
                   </div>
-                )}
+                  <a 
+                    href="https://aistudio.google.com/app/apikey" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3 rounded-lg bg-zinc-950/80 border border-zinc-800 hover:border-cyan-500/50 hover:bg-slate-900 text-cyan-400 hover:text-cyan-350 font-bold text-xs transition-all duration-300 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-sm">🔑</span> Google AI Studio (Dapatkan API Key)
+                    </span>
+                    <span className="group-hover:translate-x-1 transition-transform">↗</span>
+                  </a>
+                  
+                  {accessMode === 'license' && (
+                    <div className="p-3 rounded-lg bg-zinc-950/80 border border-zinc-800 text-[11px] text-slate-400 leading-relaxed">
+                      <span className="font-bold text-red-400 block mb-1">💡 Uji Coba / Akses Cepat:</span>
+                      Gunakan Lisensi Preset <span className="font-mono bg-red-950/40 text-red-400 font-extrabold px-1.5 py-0.5 rounded border border-red-900/50">TENDER-PRO-VIP</span> untuk melanjutkan akses penuh ke sistem.
+                    </div>
+                  )}
+                </div>
               </div>
               
               <div className="flex gap-3 justify-end mt-8">
